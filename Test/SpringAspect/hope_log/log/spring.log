@@ -1,0 +1,7 @@
+2017-03-07 20:56:16.319  INFO 10028 --- [main] hope.SpringAspectApplication             : Starting SpringAspectApplication v0.0.1-SNAPSHOT on USER-20140909TL with PID 10028 (D:\Users\Administrator\workspace\SpringAspect\target\SpringAspect-0.0.1-SNAPSHOT.jar started by Administrator in D:\Users\Administrator\workspace\SpringAspect)
+2017-03-07 20:56:16.323  INFO 10028 --- [main] hope.SpringAspectApplication             : No active profile set, falling back to default profiles: default
+2017-03-07 20:56:16.366  INFO 10028 --- [main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@46fbb2c1: startup date [Tue Mar 07 20:56:16 CST 2017]; root of context hierarchy
+2017-03-07 20:56:16.768  INFO 10028 --- [main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
+2017-03-07 20:56:16.778  INFO 10028 --- [main] hope.SpringAspectApplication             : Started SpringAspectApplication in 0.719 seconds (JVM running for 1.032)
+2017-03-07 20:56:16.780  INFO 10028 --- [Thread-2] s.c.a.AnnotationConfigApplicationContext : Closing org.springframework.context.annotation.AnnotationConfigApplicationContext@46fbb2c1: startup date [Tue Mar 07 20:56:16 CST 2017]; root of context hierarchy
+2017-03-07 20:56:16.780  INFO 10028 --- [Thread-2] o.s.j.e.a.AnnotationMBeanExporter        : Unregistering JMX-exposed beans on shutdown
