@@ -1,15 +1,18 @@
 package hope.server.service;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Optional;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 
-//import hope.server.domain.Role;
 import hope.server.domain.User;
 
 
-public interface UserRepository extends CrudRepository<User,Long> {
+public interface UserRepository extends Repository<User,Long> {
 
-	User findByName(String name);
-	List<User> findAll();
+	Optional<User> findByName(String name);
+	Collection<User> findAll();
+	Optional<User> findByEmail(String email);
+	Optional<User> findByPhone(String phone);
+	Optional<User> save(User user);
 }
