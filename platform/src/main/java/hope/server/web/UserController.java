@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,12 +47,16 @@ public class UserController {
 	}
 	
 	@RequestMapping("/user/save")
+	@PreAuthorize("hasRole('superadmin')") //relate to ROLE_superadmin
 	public Optional<User> Save(@RequestParam String name,@RequestParam String roleName,
 	@RequestParam String email,@RequestParam String password,@RequestParam String phone){
 		Optional<Role> role=this.roleService.FindByName(roleName);
-		return this.userService.Save(new User(name,phone,email,password,role.get()));
+		if(role.isPresent()){
+			return this.userService.Save(new User(name,phone,email,password,role.get()));
+		}
+		else{
+			return null;
+		}
+			
 	}
-	
-	
-
 }

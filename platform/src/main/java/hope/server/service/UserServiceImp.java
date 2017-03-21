@@ -9,10 +9,11 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import hope.server.domain.User;
 
-
+@Service
 public class UserServiceImp implements UserService {
 
 	private final UserRepository userRepository;
