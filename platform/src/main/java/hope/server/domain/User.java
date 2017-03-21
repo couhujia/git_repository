@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity(name="user")
 public class User implements Serializable {
@@ -21,7 +23,7 @@ public class User implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@Column(nullable=false,length=20)
 	private String name;
@@ -33,6 +35,7 @@ public class User implements Serializable {
 	private String email;
 	
 	@Column(nullable=false,length=20)
+	@JsonIgnore
 	private String password;
 	
 	@Column(nullable=false)
@@ -49,6 +52,7 @@ public class User implements Serializable {
 	
 	@ManyToOne(optional=true)
 	@JoinColumn(name="role_id")
+	@JsonIgnore
 	private Role role;
 	
 	protected User(){}
