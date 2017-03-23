@@ -3,6 +3,8 @@ package hope.server.web;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import hope.server.service.RoleService;
 public class RoleController {
 	
 	private final RoleService roleService;
+	protected static Logger logger=LoggerFactory.getLogger(RoleController.class);
 	
 	@Autowired
 	public RoleController(RoleService roleService){
@@ -23,7 +26,9 @@ public class RoleController {
 	}
 	
 	@RequestMapping("/role/findAll")
+	@PreAuthorize("hasRole('superadmin')")
 	public Collection<Role> FindAll(){
+		logger.info("in the find All");
 		return this.roleService.FindAll();
 	}
 	

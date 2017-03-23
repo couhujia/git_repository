@@ -4,49 +4,63 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import hope.server.domain.Role;
 
 @Service
-public class HopeUserDetailsServiceImp implements HopeUserDetailsService {
+public class UserDetailsServiceImp implements UserDetailsService {
+	
+	protected static Logger logger=LoggerFactory.getLogger(UserDetailsServiceImp.class);
 
 	private final UserService userService;
 	
-	public HopeUserDetailsServiceImp(UserService userService){
+	public UserDetailsServiceImp(UserService userService){
 		this.userService=userService;
 	}
 	
 	@Override
 	public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
 		
+		logger.info("in the load");
 		hope.server.domain.User user=this.getUserByName(name);
-	    if (user == null) {
-            throw new UsernameNotFoundException(name);
-        }
-	    
+		if (user == null) {
+	            throw new UsernameNotFoundException(name);
+	        }
+		logger.info("the name is"+user.getName()+"the rolename is "+user.getRole().getName());
+	  
 	    Role role=user.getRole();
 	    //define delegation
 	    List<SimpleGrantedAuthority> grantedAuthority=new ArrayList<SimpleGrantedAuthority>();
 	    grantedAuthority.add(new SimpleGrantedAuthority("ROLE_"+role.getName()));
-	    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(16);
-		User springUser=new User(name,
+	    /*BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(16);
+		User springUser=new User(user.getName(),
 								 bCryptPasswordEncoder.encode(user.getPassword()),
 								 true,
 								 true,
 								 true,
 								 true,
-								 grantedAuthority); 
-		
+								 grantedAuthority); */
+	    User springUser=new User(user.getName(),
+				 user.getPassword(),
+				 true,
+				 true,
+				 true,
+				 true,
+				 grantedAuthority);
+	    logger.info("the after Security context contains "+SecurityContextHolder.getContext().getAuthentication());
 		return springUser;
 	}
 
-	@Override
 	public hope.server.domain.User getUserByName(String name) {
 		Optional<hope.server.domain.User> user=this.userService.FindByName(name);
 		if(user.isPresent())

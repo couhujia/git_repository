@@ -6,10 +6,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,13 +20,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
-import hope.server.service.HopeUserDetailsService;
 
 @EnableWebSecurity
 @Configuration
@@ -31,21 +34,25 @@ import hope.server.service.HopeUserDetailsService;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	private final HopeUserDetailsService userService;
+	private final AuthenticationProvider authenticationProvider;
+	
+	protected static Logger logger=LoggerFactory.getLogger(WebSecurityConfig.class);
 	
 	@Autowired
-	public WebSecurityConfig(HopeUserDetailsService userService){
-		this.userService=userService;
+	public WebSecurityConfig(AuthenticationProvider authenticationProvider){
+		this.authenticationProvider=authenticationProvider;
 	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/login","/error","/").permitAll()
+				.antMatchers("/login","/","/test").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.formLogin()
+				.usernameParameter("username")
+				.passwordParameter("password")
 				.successHandler(new HopeAuthenticationSuccessHandler())
 				.failureHandler(new SimpleUrlAuthenticationFailureHandler())
 				.and()
@@ -53,14 +60,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutUrl("/logout")// default url is login?logout
 				.logoutSuccessHandler(new HopeLogoutSuccessHandler())
 				.and()
-				.exceptionHandling().authenticationEntryPoint(new HopeAuthenticationEntryPoint());
+				.exceptionHandling().authenticationEntryPoint(new HopeAuthenticationEntryPoint())
+				.and()
+				.csrf().disable();
 	}
 	
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception{
 		auth
-			.userDetailsService(this.userService)
-			.passwordEncoder(new BCryptPasswordEncoder(16));
+			.authenticationProvider(authenticationProvider);
 	}
 	
 	public static class HopeAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
@@ -70,7 +78,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 											HttpServletResponse response,
 											Authentication authentication)
 				throws ServletException,IOException{
+				logger.info("the request is "+request.toString());
+				logger.info("in the config before Security context contains "+SecurityContextHolder.getContext().getAuthentication());
 				clearAuthenticationAttributes(request);
+				response.addHeader("test", "helloworld");
+				logger.info("in the config after Security context contains "+SecurityContextHolder.getContext().getAuthentication());
 		}
 	}
 	
@@ -81,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 									HttpServletResponse response,
 									Authentication authentication)
 									throws ServletException,IOException{
-			//donoting
+			logger.info("out!");
 		}
 	}
 	
@@ -90,6 +102,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		public void commence(HttpServletRequest request,
 							 HttpServletResponse response,
 							 AuthenticationException authException) throws IOException{
+			logger.info("in the fialed  Security context contains "+SecurityContextHolder.getContext().getAuthentication());
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
 							"Authentication Failed:"+authException.getMessage());
 		}
