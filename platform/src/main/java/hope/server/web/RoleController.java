@@ -26,7 +26,7 @@ public class RoleController {
 	}
 	
 	@RequestMapping("/role/findAll")
-	@PreAuthorize("hasRole('superadmin')")
+	//@PreAuthorize("hasRole('superadmin')")
 	public Collection<Role> FindAll(){
 		logger.info("in the find All");
 		return this.roleService.FindAll();
@@ -43,13 +43,13 @@ public class RoleController {
 	}
 	
 	@RequestMapping("/role/save")
-	@PreAuthorize("hasRole('superadmin')")
+	//@PreAuthorize("hasRole('superadmin')")
 	public Optional<Role> Save(@RequestParam String name){
 		return this.roleService.Save(name);
 	}
 	
 	@RequestMapping("/role/deleteByName")
-	@PreAuthorize("hasRole('superadmin')")
+	//@PreAuthorize("hasRole('superadmin')")
 	public String Delete(@RequestParam String name){
 		this.roleService.DeleteByName(name);
 		return "delete Successful";

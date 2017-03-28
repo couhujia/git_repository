@@ -68,7 +68,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(AuthenticationManagerBuilder auth) throws Exception{
 		auth
 			.authenticationProvider(authenticationProvider);
-		logger.info("in web security config ");
 	}
 	
 	public static class HopeAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{

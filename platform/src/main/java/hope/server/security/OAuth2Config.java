@@ -39,7 +39,9 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 		.authorizedGrantTypes("password", "authorization_code", "refresh_token")
 		.authorities("ROLE_superadmin")
 		.scopes("write")
-		.secret("asd123");
+		.secret("asd123")
+		.accessTokenValiditySeconds(120)
+		.refreshTokenValiditySeconds(600);
 	}
 
 }
