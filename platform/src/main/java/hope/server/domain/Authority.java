@@ -14,86 +14,87 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity(name="authority")
+@Entity(name = "authority")
 public class Authority implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@GeneratedValue
 	@Id
 	private Long Id;
-	
-	@Column(length=80)
+
+	@Column(length = 80)
 	private String name;
-	
-	@Column(nullable=false,length=200)
+
+	@Column(nullable = false, length = 200)
 	private String url;
-	
-	@Column(length=200)
+
+	@Column(length = 200)
 	private String description;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date gmt_create;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date gmt_modified;
-	
+
 	@ManyToOne
-	@JoinColumn(name="role_id")
+	@JoinColumn(name = "role_id")
 	@JsonIgnore
 	private Role role;
-	
-	protected Authority(){}
-	
-	public Authority(String name,String url,String description,Role role){
-		this.name=name;
-		this.url=url;
-		this.description=description;
-		this.role=role;
-		this.gmt_create=new Date();
-		this.gmt_modified=new Date();
+
+	protected Authority() {
 	}
-	
-	public void setName(String name){
-		this.name=name;
+
+	public Authority(String name, String url, String description, Role role) {
+		this.name = name;
+		this.url = url;
+		this.description = description;
+		this.role = role;
+		this.gmt_create = new Date();
+		this.gmt_modified = new Date();
 	}
-	
-	public void setUrl(String url){
-		this.url=url;
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	
-	public void setDescription(String description){
-		this.description=description;
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
-	
-	public String getName(){
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getName() {
 		return this.name;
 	}
-	
-	public String getUrl(){
+
+	public String getUrl() {
 		return this.url;
 	}
-	
-	public String getDescription(){
+
+	public String getDescription() {
 		return this.description;
 	}
-	
-	public Role getRole(){
+
+	public Role getRole() {
 		return this.role;
 	}
-	
-	public void setgmtModifies(Date gmt_modified){
-		this.gmt_modified=gmt_modified;
+
+	public void setgmtModifies(Date gmt_modified) {
+		this.gmt_modified = gmt_modified;
 	}
-	
-	public Date getgmtModifies(){
+
+	public Date getgmtModifies() {
 		return this.gmt_modified;
 	}
-	
-	public Date getgmtCreate(){
+
+	public Date getgmtCreate() {
 		return this.gmt_create;
-	} 
+	}
 
 }

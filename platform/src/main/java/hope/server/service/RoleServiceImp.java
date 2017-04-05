@@ -12,12 +12,12 @@ import hope.server.domain.Role;
 public class RoleServiceImp implements RoleService {
 
 	private final RoleRepository roleRepostiry;
-	
+
 	@Autowired
-	public RoleServiceImp(RoleRepository roleRepository){
-		this.roleRepostiry=roleRepository;
+	public RoleServiceImp(RoleRepository roleRepository) {
+		this.roleRepostiry = roleRepository;
 	}
-	
+
 	@Override
 	public Optional<Role> FindByName(String name) {
 		return this.roleRepostiry.findByName(name);
@@ -42,7 +42,5 @@ public class RoleServiceImp implements RoleService {
 	public Optional<Role> Save(String name) {
 		return this.roleRepostiry.save(name);
 	}
-	
-	
 
 }

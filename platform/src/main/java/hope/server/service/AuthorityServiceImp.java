@@ -11,22 +11,22 @@ import hope.server.domain.Authority;
 public class AuthorityServiceImp implements AuthorityService {
 
 	private final AuthorityRepository authorityRepository;
-	
+
 	@Autowired
-	public AuthorityServiceImp( AuthorityRepository authorityRepository){
-		this.authorityRepository=authorityRepository;
+	public AuthorityServiceImp(AuthorityRepository authorityRepository) {
+		this.authorityRepository = authorityRepository;
 	}
-	
+
 	@Override
 	public Collection<Authority> findAll() {
 		return this.authorityRepository.findAll();
-		
+
 	}
 
 	@Override
 	public Collection<Authority> findByRoleId(Long role_id) {
 		return this.authorityRepository.findByRoleId(role_id);
-		
+
 	}
 
 }

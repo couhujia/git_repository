@@ -26,84 +26,71 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
-
 @EnableWebSecurity
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled=true)  //@PreAuthorize enable use
+@EnableGlobalMethodSecurity(prePostEnabled = true) // @PreAuthorize enable use
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	private final AuthenticationProvider authenticationProvider;
-	
-	protected static Logger logger=LoggerFactory.getLogger(WebSecurityConfig.class);
-	
+
+	protected static Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
+
 	@Autowired
-	public WebSecurityConfig(AuthenticationProvider authenticationProvider){
-		this.authenticationProvider=authenticationProvider;
+	public WebSecurityConfig(AuthenticationProvider authenticationProvider) {
+		this.authenticationProvider = authenticationProvider;
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.authorizeRequests()
-				.antMatchers("/login","/","/test").permitAll()
-				.anyRequest().authenticated()
-				.and()
-				.formLogin()
-				.usernameParameter("username")
-				.passwordParameter("password")
+		http.authorizeRequests().antMatchers("/login", "/", "/test").permitAll().anyRequest().authenticated().and()
+				.formLogin().usernameParameter("username").passwordParameter("password")
 				.successHandler(new HopeAuthenticationSuccessHandler())
-				.failureHandler(new SimpleUrlAuthenticationFailureHandler())
-				.and()
-				.logout()
-				.logoutUrl("/logout")// default url is login?logout
-				.logoutSuccessHandler(new HopeLogoutSuccessHandler())
-				.and()
-				.exceptionHandling().authenticationEntryPoint(new HopeAuthenticationEntryPoint())
-				.and()
-				.csrf().disable();
+				.failureHandler(new SimpleUrlAuthenticationFailureHandler()).and().logout().logoutUrl("/logout")// default
+																												// url
+																												// is
+																												// login?logout
+				.logoutSuccessHandler(new HopeLogoutSuccessHandler()).and().exceptionHandling()
+				.authenticationEntryPoint(new HopeAuthenticationEntryPoint()).and().csrf().disable();
 	}
-	
+
 	@Override
-	public void configure(AuthenticationManagerBuilder auth) throws Exception{
-		auth
-			.authenticationProvider(authenticationProvider);
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(authenticationProvider);
 	}
-	
-	public static class HopeAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
-		
+
+	public static class HopeAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
 		@Override
-		public void onAuthenticationSuccess(HttpServletRequest request,
-											HttpServletResponse response,
-											Authentication authentication)
-				throws ServletException,IOException{
-				logger.info("the request is "+request.toString());
-				logger.info("in the config before Security context contains "+SecurityContextHolder.getContext().getAuthentication());
-				clearAuthenticationAttributes(request);
-				response.addHeader("test", "helloworld");
-				logger.info("in the config after Security context contains "+SecurityContextHolder.getContext().getAuthentication());
+		public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+				Authentication authentication) throws ServletException, IOException {
+			logger.info("the request is " + request.toString());
+			logger.info("in the config before Security context contains "
+					+ SecurityContextHolder.getContext().getAuthentication());
+			clearAuthenticationAttributes(request);
+			response.addHeader("test", "helloworld");
+			logger.info("in the config after Security context contains "
+					+ SecurityContextHolder.getContext().getAuthentication());
 		}
 	}
-	
+
 	public static class HopeLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
-		
+
 		@Override
-		public void onLogoutSuccess(HttpServletRequest request,
-									HttpServletResponse response,
-									Authentication authentication)
-									throws ServletException,IOException{
+		public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
+				Authentication authentication) throws ServletException, IOException {
 			logger.info("out!");
 		}
 	}
-	
-	public static class HopeAuthenticationEntryPoint implements AuthenticationEntryPoint{
-		
-		public void commence(HttpServletRequest request,
-							 HttpServletResponse response,
-							 AuthenticationException authException) throws IOException{
-			logger.info("in the fialed  Security context contains "+SecurityContextHolder.getContext().getAuthentication());
+
+	public static class HopeAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+		public void commence(HttpServletRequest request, HttpServletResponse response,
+				AuthenticationException authException) throws IOException {
+			logger.info("in the fialed  Security context contains "
+					+ SecurityContextHolder.getContext().getAuthentication());
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-							"Authentication Failed:"+authException.getMessage());
+					"Authentication Failed:" + authException.getMessage());
 		}
 	}
 

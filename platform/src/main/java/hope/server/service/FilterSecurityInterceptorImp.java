@@ -20,59 +20,61 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.stereotype.Service;
 
 @Service
-public class FilterSecurityInterceptorImp extends AbstractSecurityInterceptor 
-	implements Filter {
+public class FilterSecurityInterceptorImp extends AbstractSecurityInterceptor implements Filter {
 
 	@Autowired
 	private FilterInvocationSecurityMetadataSource source;
-	
-/*	@Autowired
-	public FilterSecurityInterceptorImp(FilterInvocationSecurityMetadataSource securityMetadataSource){
-		this.securityMetadataSource=securityMetadataSource;
-	}*/
-	
+
+	/*
+	 * @Autowired public
+	 * FilterSecurityInterceptorImp(FilterInvocationSecurityMetadataSource
+	 * securityMetadataSource){
+	 * this.securityMetadataSource=securityMetadataSource; }
+	 */
+
 	@Autowired
-	public void setAccessDecisionManager(AccessDecisionManager manager ){
+	public void setAccessDecisionManager(AccessDecisionManager manager) {
 		super.setAccessDecisionManager(manager);
 	}
-	
+
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		String path=((HttpServletRequest)request).getRequestURI();
-		/*if(path.equals("/oauth/token"))return ;*/
-		 FilterInvocation fi = new FilterInvocation(request, response, chain);
-	     invoke(fi);
+		String path = ((HttpServletRequest) request).getRequestURI();
+		/* if(path.equals("/oauth/token"))return ; */
+		FilterInvocation fi = new FilterInvocation(request, response, chain);
+		invoke(fi);
 	}
 
 	public void invoke(FilterInvocation fi) throws IOException, ServletException {
-		//two steps
-		//1.Collection<ConfigArrtribute> arrtribute=securityMetdataSource.getAttribute(fi);
-		//2.accessDecisionManager.deside(authentication,fi,attrbute>
+		// two steps
+		// 1.Collection<ConfigArrtribute>
+		// arrtribute=securityMetdataSource.getAttribute(fi);
+		// 2.accessDecisionManager.deside(authentication,fi,attrbute>
 		InterceptorStatusToken token = super.beforeInvocation(fi);
-		try{
+		try {
 			fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
-		}finally{
+		} finally {
 			super.afterInvocation(token, null);
 		}
-		
+
 	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public Class<?> getSecureObjectClass() {
-		 return FilterInvocation.class;
+		return FilterInvocation.class;
 	}
 
 	@Override

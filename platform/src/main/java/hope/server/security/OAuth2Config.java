@@ -11,37 +11,30 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-  
+
 @Configuration
 @EnableResourceServer
 @EnableAuthorizationServer
 public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
-	
+
 	@Autowired
 	private AuthenticationManagerBuilder authenticationManager;
-	
+
 	@Override
-	public void configure(AuthorizationServerEndpointsConfigurer endpoints)
-			throws Exception {
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.authenticationManager(new AuthenticationManager() {
 			@Override
-			public Authentication authenticate(Authentication authentication)
-					throws AuthenticationException {
+			public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 				return authenticationManager.getOrBuild().authenticate(authentication);
 			}
 		});
 	}
-	
+
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory()
-		.withClient("xiaofeng")
-		.authorizedGrantTypes("password", "authorization_code", "refresh_token")
-		.authorities("ROLE_superadmin")
-		.scopes("write")
-		.secret("asd123")
-		.accessTokenValiditySeconds(120)
-		.refreshTokenValiditySeconds(600);
+		clients.inMemory().withClient("xiaofeng")
+				.authorizedGrantTypes("password", "authorization_code", "refresh_token").authorities("ROLE_superadmin")
+				.scopes("write").secret("asd123").accessTokenValiditySeconds(120).refreshTokenValiditySeconds(600);
 	}
 
 }

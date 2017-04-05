@@ -18,48 +18,49 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthticationProviderImp implements AuthenticationProvider {
-	
-	protected static Logger logger=LoggerFactory.getLogger(AuthticationProviderImp.class);
-	
+
+	protected static Logger logger = LoggerFactory.getLogger(AuthticationProviderImp.class);
+
 	private final UserDetailsService userDetailsService;
-	
-	public AuthticationProviderImp(UserDetailsService userDetailsService){
-		this.userDetailsService=userDetailsService;
+
+	public AuthticationProviderImp(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
 	}
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		UsernamePasswordAuthenticationToken token=(UsernamePasswordAuthenticationToken) authentication;
-		String username= token.getName();
-		UserDetails userDetails=null;
-		if(username!=null){
-			userDetails=this.userDetailsService.loadUserByUsername(username);
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
+		String username = token.getName();
+		UserDetails userDetails = null;
+		if (username != null) {
+			userDetails = this.userDetailsService.loadUserByUsername(username);
 		}
-		if(userDetails==null){
-			 throw new UsernameNotFoundException("not found user!"); 
-		}else if (!userDetails.isEnabled()){  
-            throw new DisabledException("user disable");  
-        }else if (!userDetails.isAccountNonExpired()) {  
-            throw new AccountExpiredException("user expire");  
-        }else if (!userDetails.isAccountNonLocked()) {  
-            throw new LockedException("user locked");  
-        }else if (!userDetails.isCredentialsNonExpired()) {  
-            throw new LockedException("credential expire");  
-        }  
-		 //BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(16);
-		if(!userDetails.getPassword().equals(token.getCredentials())){
-			logger.info("user password is"+userDetails.getPassword());
-			throw new BadCredentialsException("Invalid username/password"); 
+		if (userDetails == null) {
+			throw new UsernameNotFoundException("not found user!");
+		} else if (!userDetails.isEnabled()) {
+			throw new DisabledException("user disable");
+		} else if (!userDetails.isAccountNonExpired()) {
+			throw new AccountExpiredException("user expire");
+		} else if (!userDetails.isAccountNonLocked()) {
+			throw new LockedException("user locked");
+		} else if (!userDetails.isCredentialsNonExpired()) {
+			throw new LockedException("credential expire");
 		}
-		
+		// BCryptPasswordEncoder bCryptPasswordEncoder = new
+		// BCryptPasswordEncoder(16);
+		if (!userDetails.getPassword().equals(token.getCredentials())) {
+			logger.info("user password is" + userDetails.getPassword());
+			throw new BadCredentialsException("Invalid username/password");
+		}
+
 		return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
 				userDetails.getAuthorities());
 	}
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		 //返回true后才会执行上面的authenticate方法,这步能确保authentication能正确转换类型 
-		 return UsernamePasswordAuthenticationToken.class.equals(authentication);  
+		// 返回true后才会执行上面的authenticate方法,这步能确保authentication能正确转换类型
+		return UsernamePasswordAuthenticationToken.class.equals(authentication);
 	}
 
 }

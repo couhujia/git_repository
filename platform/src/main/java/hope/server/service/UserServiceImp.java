@@ -17,35 +17,31 @@ import hope.server.domain.User;
 public class UserServiceImp implements UserService {
 
 	private final UserRepository userRepository;
-	
+
 	@Autowired
-	public UserServiceImp(UserRepository userRepository){
-		this.userRepository=userRepository;
+	public UserServiceImp(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
-	
+
 	@Override
 	public Optional<User> FindByName(String name) {
 		return this.userRepository.findByName(name);
 	}
-
 
 	@Override
 	public Collection<User> FindAll() {
 		return this.userRepository.findAll();
 	}
 
-
 	@Override
 	public Optional<User> FindByEmail(String email) {
 		return this.userRepository.findByEmail(email);
 	}
 
-
 	@Override
 	public Optional<User> FindByPhone(String phone) {
 		return this.userRepository.findByPhone(phone);
 	}
-
 
 	@Override
 	public Optional<User> Save(User user) {
