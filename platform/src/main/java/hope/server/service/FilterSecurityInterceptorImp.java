@@ -46,7 +46,7 @@ public class FilterSecurityInterceptorImp extends AbstractSecurityInterceptor im
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		String path = ((HttpServletRequest) request).getRequestURI();
+		/*String path = ((HttpServletRequest) request).getRequestURI();*/
 		/* if(path.equals("/oauth/token"))return ; */
 		FilterInvocation fi = new FilterInvocation(request, response, chain);
 		invoke(fi);
