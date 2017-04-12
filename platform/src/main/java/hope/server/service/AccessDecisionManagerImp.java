@@ -25,8 +25,8 @@ public class AccessDecisionManagerImp implements AccessDecisionManager {
 		for (Iterator<ConfigAttribute> iter = configAttributes.iterator(); iter.hasNext();) {
 			c = iter.next();
 			needRole = c.getAttribute();
-			if (needRole.equals("token"))
-				return;
+//			if (needRole.equals("token"))
+//				return;
 			for (GrantedAuthority ga : authentication.getAuthorities()) {
 				if (needRole.trim().equals(ga.getAuthority())) {
 					return;

@@ -34,7 +34,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("xiaofeng")
 				.authorizedGrantTypes("password", "authorization_code", "refresh_token").authorities("ROLE_superadmin")
-				.scopes("write").secret("asd123").accessTokenValiditySeconds(120).refreshTokenValiditySeconds(600);
+				.scopes("write").secret("asd123").accessTokenValiditySeconds(1200).refreshTokenValiditySeconds(6000);
 	}
 
 }

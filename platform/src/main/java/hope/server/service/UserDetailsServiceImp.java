@@ -41,7 +41,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 		if (user == null) {
 			throw new UsernameNotFoundException(name);
 		}
-		logger.info("the name is" + user.getName() + "the rolename is " + user.getRole().getName());
+		logger.info("the name is" + user.getName() + " the rolename is " + user.getRole().getName());
 
 		Role role = user.getRole();
 		Collection<Authority> powers = this.authorityService.findByRoleId(role.getId());
